@@ -3,6 +3,7 @@ using Aspnet_MVC_Crud.Models;
 using Aspnet_MVC_Crud.Models.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace Aspnet_MVC_Crud.Controllers
 {
@@ -63,9 +64,28 @@ namespace Aspnet_MVC_Crud.Controllers
                     Department = employee.Department,
                     DateOfBirth = employee.DateOfBirth
                 };
-                return View(viewModel);
+                return await Task.Run(() =>View("View", viewModel));
             }
             
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> View(UpdateEmployeeViewModel model)
+        {
+            var employee = await mvcDemoDbContext.Employees.FindAsync(model.Id);
+            if(employee != null)
+            {
+                employee.Name = model.Name;
+                employee.Email = model.Email;
+                employee.Salary = model.Salary;
+                employee.DateOfBirth = model.DateOfBirth;
+                employee.Department = model.Department;
+
+                await mvcDemoDbContext.SaveChangesAsync();
+
+                return RedirectToAction("Index");
+            }
             return RedirectToAction("Index");
         }
 
