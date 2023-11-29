@@ -2,6 +2,7 @@
 using Aspnet_MVC_Crud.Models;
 using Aspnet_MVC_Crud.Models.Domain;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Aspnet_MVC_Crud.Controllers
 {
@@ -12,6 +13,15 @@ namespace Aspnet_MVC_Crud.Controllers
         public EmployeesController(MvcDemoDbContext _mvcDemoDbContext)
         {
             this.mvcDemoDbContext = _mvcDemoDbContext;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var employees = await mvcDemoDbContext.Employees.ToListAsync();
+            return View(employees);
+
+            // create view
         }
 
         [HttpGet]
