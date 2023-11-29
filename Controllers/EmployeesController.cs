@@ -89,5 +89,20 @@ namespace Aspnet_MVC_Crud.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(UpdateEmployeeViewModel model)
+        {
+            var employee = await mvcDemoDbContext.Employees.FindAsync(model.Id);
+
+            if(employee != null)
+            {
+                mvcDemoDbContext.Employees.Remove(employee);
+                await mvcDemoDbContext.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index"); // for now we are not showing any error message, if employee is not found
+
+        }
+
     }
 }
