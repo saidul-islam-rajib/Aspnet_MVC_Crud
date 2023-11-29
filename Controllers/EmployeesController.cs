@@ -48,7 +48,26 @@ namespace Aspnet_MVC_Crud.Controllers
             return RedirectToAction("Index");
         }
 
-
+        [HttpGet]
+        public async Task<IActionResult> ViewAsync(Guid id)
+        {
+            var employee = await mvcDemoDbContext.Employees.FirstOrDefaultAsync(x => x.Id == id);
+            if(employee != null)
+            {
+                var viewModel = new UpdateEmployeeViewModel()
+                {
+                    Id = employee.Id,
+                    Name = employee.Name,
+                    Email = employee.Email,
+                    Salary = employee.Salary,
+                    Department = employee.Department,
+                    DateOfBirth = employee.DateOfBirth
+                };
+                return View(viewModel);
+            }
+            
+            return RedirectToAction("Index");
+        }
 
     }
 }
